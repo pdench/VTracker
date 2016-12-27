@@ -1,10 +1,52 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<VTracker.Models.Category>
+
+@{
     ViewBag.Title = "Confirm Email";
 }
 
 <h2>@ViewBag.Title.</h2>
 <div>
     <p>
-        Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-    </p>
+        Thank you for confirming your email. </p>
+        @if (!Request.IsAuthenticated)
+        {
+            <p>Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) </p>
+        }
+        else
+        {
+            <p>
+                We've created a few categories to get you started, listed below. Before you can log your activities, you need to create a vehicle.
+                @Html.ActionLink("Click here", "Vehicle", "Create") to add your vehicles.
+            </p>
+            <table class="table-striped table-bordered table-condensed table-responsive">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+
+                        <td>
+                            @if (item.BuiltIn == false)
+                            {
+                                @Html.ActionLink("Edit |", "Edit", new { id = item.Id })
+                            }
+                            @if (item.BuiltIn == false)
+                            {
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        }
+    
 </div>

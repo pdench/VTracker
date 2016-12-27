@@ -11,15 +11,39 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using VTracker.Models;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Configuration;
 
 namespace VTracker
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            await configSendGridAsync(message);
+        }
+
+        private async Task configSendGridAsync(IdentityMessage message)
+        {
+            try
+            {
+
+                string apiKey = ConfigurationManager.AppSettings["sendgridkey"];
+                dynamic sg = new SendGridAPIClient(apiKey);
+
+                Email from = new Email("vtracker@pauldench.com");
+                String subject = message.Subject;
+                Email to = new Email(message.Destination);
+                Content content = new Content("text/html", message.Body);
+                Mail mail = new Mail(from, subject, to, content);
+
+                dynamic response = sg.client.mail.send.post(requestBody: mail.Get());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 

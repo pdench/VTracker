@@ -60,6 +60,8 @@ namespace VTracker.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public int NumLogins { get; set; }
     }
 
     public class RegisterViewModel
@@ -68,6 +70,11 @@ namespace VTracker.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        public string FirstName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -79,6 +86,7 @@ namespace VTracker.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
     }
 
     public class ResetPasswordViewModel

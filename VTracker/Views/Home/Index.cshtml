@@ -1,31 +1,51 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@using Microsoft.AspNet.Identity
+@using VTracker.Extensions
+
+    @{
+        ViewBag.Title = "Home Page";
+    }
+
+<p class="lead"></p>
+
+@if (!Request.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Getting started</h3>
+            <p class="text-primary">
+                Welcome to Vehicle Tracker. A simple app to help you track the maintenance of your vehicles. 
+            </p>
+            <p>
+                Sign in below, or if you're new @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }) for a free account now!
+            </p>
+            <p>
+                Why sign up? You can track your gas purchases (we'll calculate your Miles Per Gallon for you); track your oil changes, and any other items you'd like. Once you register,
+                we will create some standard categories for you; you can add as many as you like. So register now, create your vehicles (again, as many as you'd like), and start keeping track.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>
+                @Html.Partial("_Login")
+            </p>
+        </div>
+    </div>
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+else
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+{
+
+
+    <p>
+        <h3>A few tips...</h3>
+        <ul>
+            <li>You can use the "quick links" in the menu to quickly add gas purchases and oil changes.</li>
+            <li>You can add multiple items at a time by clicking the "Save and Create Another" buttons on the entry pages.</li>
+            <li>You can download your activities into Excel; click the "Excel" button on the @Html.ActionLink("Activities detail page", "Index", "Activity").</li>
+        </ul>
+        
+
+    </p>
+}

@@ -1,0 +1,80 @@
+﻿@model VTracker.Models.Activity
+
+@{
+    ViewBag.Title = "My Activity Details";
+}
+
+<div>
+    <h4>My Activity Details</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vehicle.VehicleName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vehicle.VehicleName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActivityDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActivityDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mileage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mileage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Miles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Miles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Gallons)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Gallons)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comments)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comments)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

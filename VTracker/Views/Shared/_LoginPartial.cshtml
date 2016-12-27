@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
+@using VTracker.Extensions
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -7,7 +9,19 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink("Activities", "Index", "Activity")
+        </li>
+        <li>
+            @Html.ActionLink("Vehicles", "Index", "Vehicle")
+        </li>
+        <li>
+            @Html.ActionLink("Categories", "Index", "Category")
+        </li>
+        <li>
+            @Html.ActionLink("Get Gas", "GetGas", "Activity")
+        </li>
+        <li>
+            @Html.ActionLink("Hello " + User.Identity.GetFirstName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
