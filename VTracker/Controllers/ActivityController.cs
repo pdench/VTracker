@@ -12,6 +12,10 @@ using VTracker.DAL;
 using VTracker.Models;
 using VTracker.Extensions;
 using VTracker.ViewModels;
+using System.IO;
+using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace VehicleTracker.Controllers
 {
@@ -31,10 +35,10 @@ namespace VehicleTracker.Controllers
 
             var activities = db.Activities.Include(a => a.Category).Include(a => a.Vehicle);
 
-            var gasOutput = activities.OrderByDescending(a=> a.VehicleId).ThenBy(a => a.ActivityDate).ThenBy(a => a.CategoryId)
+            var gasOutput = activities.OrderBy(a=> a.Vehicle.VehicleName).ThenByDescending(a => a.ActivityDate).ThenBy(a => a.Category.Description)
                 .Where(a => a.Vehicle.AccountId == accountId && a.CategoryId == gasId);
 
-            var nonGasOutput = activities.OrderByDescending(a => a.ActivityDate).ThenBy(a => a.CategoryId)
+            var nonGasOutput = activities.OrderBy(a => a.Vehicle.VehicleName).ThenByDescending(a => a.ActivityDate).ThenBy(a => a.Category.Description)
                 .Where(a => a.Vehicle.AccountId == accountId && a.CategoryId != gasId);
 
             if (vehid != null)
@@ -57,9 +61,9 @@ namespace VehicleTracker.Controllers
             {
                 if (a.Gallons > 0)
                 {
-                    a.MPG = a.Miles / a.Gallons;
-                    totalMiles += a.Miles;
-                    totalGallons += a.Gallons;
+                    a.MPG = a.Miles.GetValueOrDefault() / a.Gallons.GetValueOrDefault();
+                    totalMiles += a.Miles.GetValueOrDefault();
+                    totalGallons += a.Gallons.GetValueOrDefault();
                 }
             }
 
@@ -123,6 +127,9 @@ namespace VehicleTracker.Controllers
 
             var model = new Activity();
             model.ActivityDate = DateTime.Now;
+            model.Mileage = 0;
+            model.Miles = 0;
+            model.Gallons = 0;
             //model.Vehicle.AccountId = accountId;
             return View("Create", model);
         }
@@ -138,7 +145,41 @@ namespace VehicleTracker.Controllers
 
             activity.DateCreated = DateTime.Now;
             activity.Deleted = false;
-            
+ 
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Activities.Add(activity);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException ex)
+            {
+                ModelState.AddModelError("", "Unable to save changes.");
+            }
+
+            var categories = GetCategories();
+            var vehicles = GetVehicles();
+
+            ViewBag.CategoryId = new SelectList(categories, "Id", "Description", activity.CategoryId);
+            ViewBag.VehicleId = new SelectList(vehicles, "Id", "VehicleName", activity.VehicleId);
+            return View(activity);
+        }        
+        
+        // POST: Activity/GetGas
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult GetGas([Bind(Include = "VehicleId,CategoryId,ActivityDate,Mileage,Miles,Gallons,Description,Comments")] Activity activity)
+        {
+
+            activity.DateCreated = DateTime.Now;
+            activity.Deleted = false;
+
             try
             {
                 if (ModelState.IsValid)
@@ -262,6 +303,25 @@ namespace VehicleTracker.Controllers
             return RedirectToAction("Index");
         }
 
+
+        // GET: Activity/Download
+        [Authorize]
+        public HttpResponseMessage Download()
+        {
+
+            accountId = GetUserId();
+            int gasId = GetGasCatId(accountId);
+
+            var activities = db.Activities.Include(a => a.Category).Include(a => a.Vehicle)
+                .Where(a => a.Vehicle.AccountId == accountId)
+                .OrderByDescending(a => a.DateCreated);
+
+            HttpResponseMessage output = CreateDownloadCSV(activities.ToList());
+
+            ViewBag.Message = "Download Completed.";
+            return output;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -308,5 +368,42 @@ namespace VehicleTracker.Controllers
             return util.GetGasCatId(acctId);
 
         }
+
+        public HttpResponseMessage CreateDownloadCSV(List<Activity> input)
+        {
+
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Activity activity in input)
+            {
+                sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+                    activity.Vehicle.VehicleName,
+                    activity.ActivityDate,
+                    activity.Category,
+                    activity.Gallons,
+                    activity.Miles,
+                    activity.Mileage,
+                    activity.Description,
+                    activity.Comments, 
+                    Environment.NewLine
+                    );
+            }
+
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(sb.ToString());
+            writer.Flush();
+            stream.Position = 0;
+
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new StreamContent(stream);
+            result.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("text/csv");
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = "Export.csv" };
+            return result;
+
+        }
+            
     }
 }

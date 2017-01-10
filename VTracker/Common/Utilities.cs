@@ -1,6 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Security.Policy;
+using System.Threading.Tasks;
 using System.Web;
 using VTracker.DAL;
 
@@ -38,5 +44,26 @@ namespace VTracker.Common
             return gasId;
         }
 
+        private async Task configSendGridAsync(IdentityMessage message)
+        {
+            try
+            {
+
+                string apiKey = ConfigurationManager.AppSettings["sendgridkey"];
+                dynamic sg = new SendGridAPIClient(apiKey);
+
+                Email from = new Email("vtracker@pauldench.com");
+                String subject = message.Subject;
+                Email to = new Email(message.Destination);
+                Content content = new Content("text/html", message.Body);
+                Mail mail = new Mail(from, subject, to, content);
+
+                dynamic response = sg.client.mail.send.post(requestBody: mail.Get());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

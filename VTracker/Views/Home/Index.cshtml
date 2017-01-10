@@ -5,12 +5,14 @@
         ViewBag.Title = "Home Page";
     }
 
-<p class="lead"></p>
+<p class="lead">
+    @ViewBag.Message
+</p>
 
 @if (!Request.IsAuthenticated)
 {
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-10">
             <h3>Getting started</h3>
             <p class="text-primary">
                 Welcome to Vehicle Tracker. A simple app to help you track the maintenance of your vehicles. 
@@ -41,8 +43,7 @@ else
     <p>
         <h3>A few tips...</h3>
         <ul>
-            <li>You can use the "quick links" in the menu to quickly add gas purchases and oil changes.</li>
-            <li>You can add multiple items at a time by clicking the "Save and Create Another" buttons on the entry pages.</li>
+            <li>You can use the "Get Gas" link on the menu to quickly add gas purchases.</li>
             <li>You can download your activities into Excel; click the "Excel" button on the @Html.ActionLink("Activities detail page", "Index", "Activity").</li>
         </ul>
         

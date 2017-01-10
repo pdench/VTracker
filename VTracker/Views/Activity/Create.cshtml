@@ -1,5 +1,4 @@
 ﻿@model VTracker.Models.Activity
-
 @{
     ViewBag.Title = "Create Activity";
 }
@@ -13,7 +12,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.VehicleId, "VehicleId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.VehicleId, "Vehicle", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("VehicleId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.VehicleId, "", new { @class = "text-danger" })
@@ -21,7 +20,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CategoryId, "CategoryId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
@@ -37,53 +36,65 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Mileage, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Mileage, htmlAttributes: new { @class = "control-label col-md-2 nonGas" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Mileage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Mileage, new { htmlAttributes = new { @class = "form-control nonGas" } })
                 @Html.ValidationMessageFor(model => model.Mileage, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Miles, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Miles, htmlAttributes: new { @class = "control-label col-md-2 gas" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Miles, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Miles, new { htmlAttributes = new { @class = "form-control mpgCalc gas", ng_model = "miles", @Value = 0 } })
                 @Html.ValidationMessageFor(model => model.Miles, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Gallons, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Gallons, htmlAttributes: new { @class = "control-label col-md-2 gas" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Gallons, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Gallons, new { htmlAttributes = new { @class = "form-control mpgCalc gas", ng_model = "gallons", @Value = 0 } })
                 @Html.ValidationMessageFor(model => model.Gallons, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MPG, htmlAttributes: new { @class = "control-label col-md-2 gas" })
+            <div class="col-md-10 gas" id="mpg">
+                {{ miles / gallons | number:2 }}
+                @*@Html.TextBoxFor(model => model.MPG, new { htmlAttributes = new { @class = "form-control", ng_model = "mpg" } })*@
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            <label class="control-label col-md-2" for="mpg">
+                MPG
+            </label>
+            <div class="col-md-10" id="mpg">
+                {{ miles / gallons }}
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2 nonGas" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control nonGas" } })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2 nonGas" })
             <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control text-box" } })
-                @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+                @Html.TextAreaFor(model => model.Comments, 10, 80, new { @class = "form-control nonGas" })
+               @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save and Create Another" onclick="createanother()" class="btn btn-primary" />
             </div>
         </div>
 
@@ -100,7 +111,38 @@
 }
 
 <script>
-    $(function () {
-        $('#ActivitDate').datepicker();
+    $(document).ready(function () {
+        $('#ActivityDate').datepicker();
+        $('#mpg').hide();
+        
+        SetGasNonGas();
+
+        $('.mpgCalc').keyup(function () {
+            //alert('changed');
+            var gallons = $('#Gallons').val();
+            var miles = $('#Miles').val();
+            if ($.isNumeric(gallons) && ($.isNumeric(miles))) {
+                $('#mpg').show();
+            }
+            else {
+                $('#mpg').hide();
+            };
+        });
+
+        $('#CategoryId').change(function () {
+            SetGasNonGas();
+        });
+
     });
+
+    function SetGasNonGas() {
+        if ($('#CategoryId option:selected').text() == 'Gas') {
+            $('.nonGas').hide();
+            $('.gas').show();
+        }
+        else {
+            $('.nonGas').show();
+            $('.gas').hide();
+        };
+    }
 </script>

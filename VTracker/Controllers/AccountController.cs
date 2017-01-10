@@ -98,7 +98,8 @@ namespace VTracker.Controllers
                     Session["userId"] = user.Id;
                     user.NumLogins++;
                     UserManager.Update(user);
-                    return RedirectToLocal(user.NumLogins > 1 ? returnUrl : "~/Category/Index?FirstLogin=true");
+                    string gotoUrl = (returnUrl ?? "~/Activity/Index");
+                    return RedirectToLocal(user.NumLogins > 1 ? gotoUrl : "~/Category/Index?FirstLogin=true");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

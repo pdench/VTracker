@@ -40,6 +40,7 @@ namespace VehicleTracker.Controllers
         [Authorize]
         public ActionResult Details(int? id)
         {
+            accountId = GetUserId();
             int gasId = GetGasCatId(accountId);
 
             if (id == null)
@@ -76,9 +77,9 @@ namespace VehicleTracker.Controllers
             {
                 if (a.Gallons > 0)
                 {
-                    a.MPG = a.Miles / a.Gallons;
-                    totalMiles += a.Miles;
-                    totalGallons += a.Gallons;
+                    a.MPG = a.Miles.GetValueOrDefault() / a.Gallons.GetValueOrDefault();
+                    totalMiles += a.Miles.GetValueOrDefault();
+                    totalGallons += a.Gallons.GetValueOrDefault();
                 }
             }
 

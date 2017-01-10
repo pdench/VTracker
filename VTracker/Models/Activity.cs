@@ -6,22 +6,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VTracker.Models
 {
-    public class Activity: BaseModel
+    public class Activity : BaseModel
     {
 
         public int Id { get; set; }
+        [Display(Name = "Vehicle")]
         public int VehicleId { get; set; }
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date")]
         public DateTime ActivityDate { get; set; }
 
-        public decimal Mileage { get; set; }
-        public decimal Miles { get; set; }
-        public decimal Gallons { get; set; }
+        [DisplayFormat(DataFormatString = "{0:########.#}")]
+        public decimal? Mileage { get; set; }
+        [DisplayFormat(DataFormatString = "{0:########.#}")]
+        public decimal? Miles { get; set; }
+        [DisplayFormat(DataFormatString = "{0:##.##}")]
+        public decimal? Gallons { get; set; }
 
         [StringLength(100, ErrorMessage = "Description cannot be longer that 100 characters.")]
         public string Description { get; set; }
@@ -31,6 +36,7 @@ namespace VTracker.Models
         public string Comments { get; set; }
 
         [NotMapped]
+        [DisplayFormat(DataFormatString = "{0:##.##}")]
         public decimal MPG { get; set; }
 
         public virtual Vehicle Vehicle { get; set; }

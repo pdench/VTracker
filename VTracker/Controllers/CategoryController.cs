@@ -10,6 +10,7 @@ using VTracker.DAL;
 using VTracker.Models;
 using VTracker.Common;
 using VTracker.Extensions;
+using VTracker.ViewModels;
 
 namespace VehicleTracker.Controllers
 {
@@ -22,22 +23,28 @@ namespace VehicleTracker.Controllers
 
         // GET: Category
         [Authorize]
-        public ActionResult Index(bool? firstLogin = true)
+        public ActionResult Index(bool? firstLogin = false)
         {
 
-            if (firstLogin.GetValueOrDefault())
-            {
-                ViewBag.FirstLogin = "true";
-            }
             accountId = GetUserId();
             var categories = from c in db.Categories                             
                              select c;
 
             var output = categories.OrderByDescending(cat => cat.BuiltIn).ThenBy(cat=>cat.Description)
                 .Where(cat => cat.AccountId == accountId);
+
+            CategoryViewModel cvModel = new CategoryViewModel();
+
+            cvModel.Categories = output.ToList();
+            
+            if (firstLogin.GetValueOrDefault())
+            {
+                cvModel.FirstLogin = true;
+            }
+            
             //categories = categories.Where(c => c.AccountId == accountId );
 
-            return View(output);
+            return View(cvModel);
         }
 
         // GET: Category/Details/5

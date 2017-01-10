@@ -28,7 +28,7 @@ namespace VTracker.Migrations
                 new Vehicle { VehicleName="Harley", AccountId="ae36944e-16c2-491e-bc35-e487a3c6500d", DateCreated=DateTime.Today, DateUpdated=DateTime.Today }
             };
             vehicles.ForEach(v => context.Vehicles.Add(v));
-            context.SaveChanges();
+            //context.SaveChanges();
 
             var categories = new List<Category>
             {
@@ -43,7 +43,7 @@ namespace VTracker.Migrations
             };
 
             categories.ForEach(c => context.Categories.Add(c));
-            context.SaveChanges();
+            //context.SaveChanges();
 
             var activities = new List<Activity>
             {
@@ -55,7 +55,7 @@ namespace VTracker.Migrations
             };
 
             activities.ForEach(a => context.Activities.Add(a));
-            context.SaveChanges();
+            //context.SaveChanges();
 
             var builtIn = new List<BuiltInCategories>
             {
