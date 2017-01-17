@@ -39,19 +39,19 @@ namespace VTracker.Models
         public bool RememberMe { get; set; }
     }
 
-    public class ForgotViewModel
-    {
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
+    //public class ForgotViewModel
+    //{
+    //    [Required]
+    //    [Display(Name = "Email")]
+    //    public string Email { get; set; }
+    //}
 
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "User Name")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -70,6 +70,11 @@ namespace VTracker.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "User Name")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
+        public string UserName { get; set; }
 
         [Required]
         [Display(Name = "First Name")]
@@ -113,8 +118,8 @@ namespace VTracker.Models
     public class ForgotPasswordViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "User Name")]
+        public string UserName { get; set; }
+
     }
 }
