@@ -15,7 +15,7 @@ namespace VTracker.Extensions
             HttpContext ctx = HttpContext.Current;
             if (ctx.Session["userId"] == null)
             {
-                filterContext.Result = new RedirectResult("~/Home/Index");
+                filterContext.Result = new RedirectResult("~/Account/LogOff");
                 return;
             }
             base.OnActionExecuting(filterContext);

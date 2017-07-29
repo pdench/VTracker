@@ -16,6 +16,10 @@ using System.IO;
 using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using DotNet.Highcharts.Options;
+using DotNet.Highcharts.Helpers;
+using DotNet.Highcharts;
+using DotNet.Highcharts.Enums;
 
 namespace VehicleTracker.Controllers
 {
@@ -28,49 +32,70 @@ namespace VehicleTracker.Controllers
 
         // GET: Activity
         [Authorize]
-        public ActionResult Index(int? page, int? vehid)
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+
+
+        [Authorize]
+        public JsonResult GetActivities(int? page, int? vehid)
         {
             accountId = GetUserId();
             int gasId = GetGasCatId(accountId);
 
-            var activities = db.Activities.Include(a => a.Category).Include(a => a.Vehicle);
+            // all activities for all vehicles
+            var activities = db.Activities.Include(a => a.Category).Include(a => a.Vehicle)
+                .OrderBy(a => a.Vehicle.VehicleName)
+                .ThenByDescending(a => a.ActivityDate)
+                .ThenBy(a => a.Category.Description)
+                .Where(a => a.Vehicle.AccountId == accountId);
 
-            var gasOutput = activities.OrderBy(a=> a.Vehicle.VehicleName).ThenByDescending(a => a.ActivityDate).ThenBy(a => a.Category.Description)
+            // only gas purchases for all vehicles
+            var gasOutput = activities.OrderBy(a => a.Vehicle.VehicleName).ThenByDescending(a => a.ActivityDate).ThenBy(a => a.Category.Description)
                 .Where(a => a.Vehicle.AccountId == accountId && a.CategoryId == gasId);
 
-            var nonGasOutput = activities.OrderBy(a => a.Vehicle.VehicleName).ThenByDescending(a => a.ActivityDate).ThenBy(a => a.Category.Description)
-                .Where(a => a.Vehicle.AccountId == accountId && a.CategoryId != gasId);
+            //var nonGasOutput = activities.OrderBy(a => a.Vehicle.VehicleName).ThenByDescending(a => a.ActivityDate).ThenBy(a => a.Category.Description)
+            //    .Where(a => a.Vehicle.AccountId == accountId && a.CategoryId != gasId);
 
+            // if there is a vehicle Id, then filter all and gas activities down to that one vehicle
             if (vehid != null)
             {
                 gasOutput = gasOutput.Where(a => a.VehicleId == vehid);
-                nonGasOutput = nonGasOutput.Where(a => a.VehicleId == vehid);
+                activities = activities.Where(a => a.VehicleId == vehid);
+                //nonGasOutput = nonGasOutput.Where(a => a.VehicleId == vehid);
             }
+
+            // data for MPG chart
+            var xDataVehicles = gasOutput.Select(v => v.Vehicle).ToArray();
+            var seriesDataMPG = gasOutput.Select(v => v.Miles / v.Gallons).ToArray();
+            var yDataDates = gasOutput.Select(v => v.ActivityDate).ToArray();
 
             int pageSize = 10;
             int pageNumber = (page ?? 1);
 
-            ActivityViewModel avModel = new ActivityViewModel();
-            avModel.GasPurchases = gasOutput.ToList();
-            avModel.NonGasPurchases = nonGasOutput.ToList();
+            //ActivityViewModel avModel = new ActivityViewModel();
+            //avModel.GasPurchases = gasOutput.ToList();
+            //avModel.NonGasPurchases = nonGasOutput.ToList();
 
-            decimal totalMiles = 0;
-            decimal totalGallons = 0;
+            //decimal totalMiles = 0;
+            //decimal totalGallons = 0;
 
-            foreach (Activity a in avModel.GasPurchases)
-            {
-                if (a.Gallons > 0)
-                {
-                    a.MPG = a.Miles.GetValueOrDefault() / a.Gallons.GetValueOrDefault();
-                    totalMiles += a.Miles.GetValueOrDefault();
-                    totalGallons += a.Gallons.GetValueOrDefault();
-                }
-            }
+            //foreach (Activity a in avModel.GasPurchases)
+            //{
+            //    if (a.Gallons > 0)
+            //    {
+            //        a.MPG = a.Miles.GetValueOrDefault() / a.Gallons.GetValueOrDefault();
+            //        totalMiles += a.Miles.GetValueOrDefault();
+            //        totalGallons += a.Gallons.GetValueOrDefault();
+            //    }
+            //}
 
-            
+            return Json(activities.ToList(), JsonRequestBehavior.AllowGet);
 
 
-            return View(avModel);
+            //return View(avModel);
         }
 
         // GET: Activity/Details/5
@@ -140,7 +165,7 @@ namespace VehicleTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create([Bind(Include = "VehicleId,CategoryId,ActivityDate,Mileage,Miles,Gallons,Description,Comments")] Activity activity)
+        public ActionResult Create([Bind(Include = "VehicleId,CategoryId,ActivityDate,Mileage,Miles,Gallons,Description,Comments,Cost")] Activity activity)
         {
 
             activity.DateCreated = DateTime.Now;
@@ -174,7 +199,7 @@ namespace VehicleTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult GetGas([Bind(Include = "VehicleId,CategoryId,ActivityDate,Mileage,Miles,Gallons,Description,Comments")] Activity activity)
+        public ActionResult GetGas([Bind(Include = "VehicleId,CategoryId,ActivityDate,Mileage,Miles,Gallons,Description,Comments,Cost")] Activity activity)
         {
 
             activity.DateCreated = DateTime.Now;
@@ -238,7 +263,7 @@ namespace VehicleTracker.Controllers
             }
 
             var activity = db.Activities.Find(id);
-            if (TryUpdateModel(activity, "", new string[] { "VehicleId", "CategoryId", "ActivityDate", "Mileage", "Miles", "Gallons", "Description", "Comments"}))
+            if (TryUpdateModel(activity, "", new string[] { "VehicleId", "CategoryId", "ActivityDate", "Mileage", "Miles", "Gallons", "Description", "Comments", "Cost"}))
             {
                 try
                 {
@@ -374,13 +399,24 @@ namespace VehicleTracker.Controllers
 
 
             StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+                "VehicleName",
+                "Date",
+                "Description",
+                "Gallons",
+                "Miles",
+                "Mileage",
+                "Description",
+                "Comments",
+                Environment.NewLine
+                );
 
             foreach (Activity activity in input)
             {
                 sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
                     activity.Vehicle.VehicleName,
                     activity.ActivityDate,
-                    activity.Category,
+                    activity.Category.Description,
                     activity.Gallons,
                     activity.Miles,
                     activity.Mileage,
@@ -397,13 +433,18 @@ namespace VehicleTracker.Controllers
             stream.Position = 0;
 
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            result.Content = new StreamContent(stream);
-            result.Content.Headers.ContentType =
-                new MediaTypeHeaderValue("text/csv");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = "Export.csv" };
+            
+            result.Content = new ByteArrayContent(stream.ToArray());        //new StreamContent(stream);
+            //result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+            result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            result.Content.Headers.ContentDisposition.FileName = "vtracker.csv";
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            // result.Content.Headers.Add("x-filename", "vtracker.csv"); //We will use this below
             return result;
 
         }
-            
+
+        
     }
 }

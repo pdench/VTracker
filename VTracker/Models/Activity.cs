@@ -27,6 +27,8 @@ namespace VTracker.Models
         public decimal? Miles { get; set; }
         [DisplayFormat(DataFormatString = "{0:##.##}")]
         public decimal? Gallons { get; set; }
+        [DataType(DataType.Currency)]
+        public float? Cost { get; set; }
 
         [StringLength(100, ErrorMessage = "Description cannot be longer that 100 characters.")]
         public string Description { get; set; }

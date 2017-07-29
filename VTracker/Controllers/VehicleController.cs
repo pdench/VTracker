@@ -21,9 +21,18 @@ namespace VehicleTracker.Controllers
         private string accountId = "";
         private Utilities util;
 
+
         // GET: Vehicle
         [Authorize]
         public ActionResult Index()
+        {
+            return View();
+        }
+
+
+        // GET: Vehicle
+        [Authorize]
+        public JsonResult GetVehicles()
         {
             accountId = GetUserId();
 
@@ -32,7 +41,7 @@ namespace VehicleTracker.Controllers
 
             vehicles = vehicles.Where(v => v.AccountId == accountId);
 
-            return View(vehicles);
+            return Json(vehicles.ToList(), JsonRequestBehavior.AllowGet);
 
         }
 

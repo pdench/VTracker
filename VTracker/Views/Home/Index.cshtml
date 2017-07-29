@@ -11,7 +11,7 @@
 
 @if (!Request.IsAuthenticated)
 {
-    <div class="row">
+    <div class="row" ng-controller="myAppCtrl">
         <div class="col-md-10">
             <h3>Getting started</h3>
             <p class="text-primary">
@@ -24,6 +24,7 @@
                 Why sign up? You can track your gas purchases (we'll calculate your Miles Per Gallon for you); track your oil changes, and any other items you'd like. Once you register,
                 we will create some standard categories for you; you can add as many as you like. So register now, create your vehicles (again, as many as you'd like), and start keeping track.
             </p>
+            <br />
         </div>
     </div>
     <div class="row">
