@@ -184,7 +184,7 @@ namespace VTracker.Controllers
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your VTRacker account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your Vehicle Tracker account");
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
                     ViewBag.Message = "Check your email and confirm your account before logging in.";
 
@@ -241,7 +241,7 @@ namespace VTracker.Controllers
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your Vehicle Tracker password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
@@ -276,7 +276,7 @@ namespace VTracker.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.UserName);
+            var user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist

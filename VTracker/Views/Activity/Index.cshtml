@@ -1,4 +1,5 @@
-﻿@using PagedList.Mvc;
+﻿@model VTracker.ViewModels.ActivityViewModel
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "My Activities";
@@ -10,79 +11,156 @@
 </p>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })&nbsp;
-    @Html.ActionLink("Download", "Download", null, new { @class = "btn btn-primary" })&nbsp;
-
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })&nbsp;@Html.ActionLink("Download", "Download", null, new { @class = "btn btn-primary" })
 </p>
+<table class="table table-striped table-bordered table-condensed table-responsive">
+    <tr>
+        <th colspan="6" class="text-center">Gas Purchases</th>
+    </tr>
+    <tr>
+        <th></th>
+        <th>Activity Date</th>
+        <th>Total Miles</th>
+        <th>Gallons</th>
+        <th>MPG</th>
+    </tr>
 
+    @{
+        var previousItem = "";
+    }
 
-@{
-    var previousItem = "";
-}
-<div ng-controller="activityCtrl">
-    <img src="~/Content/ajax-loader.gif" ng-show="loading" />
-    <div class="spinner" ng-show="!loading">
-
-        <table class="table table-striped table-bordered table-condensed table-responsive">
+    @foreach (var item in Model.GasPurchases)
+    {
+        if (previousItem != item.Vehicle.VehicleName)
+        {
+            previousItem = item.Vehicle.VehicleName;
             <tr>
-                <th colspan="7" class="text-center">Gas Purchases</th>
+                <th colspan="6" class="text-center">
+                    @Html.DisplayFor(modelItem => item.Vehicle.VehicleName)
+                </th>
             </tr>
-            <tr>
-                <th>Vehicle</th>
-                <th>Activity Date</th>
-                <th>Total Miles</th>
-                <th>Gallons</th>
-                <th>MPG</th>
-                <th>Cost</th>
-                <th></th>
-            </tr>
-            <tr ng-repeat="activity in dataList | filter: { Category: { Description: 'Gas' } }">
-                <td ng-bind="activity.Vehicle.VehicleName"></td>
-                <td>{{ activity.ActivityDate | parseDate | date : "MM/dd/yyyy" }}</td>
-                <td ng-bind="activity.Miles | number:2"></td>
-                <td ng-bind="activity.Gallons | number:2"></td>
-                <td>{{ activity.Miles / activity.Gallons | number:2}}</td>
-                <td ng-bind="activity.Cost| currency"></td>
-                <td style="width:60px">
-                    <button ng-click="editActivity(activity)" class="btn btn-primary btn-xs">Edit</button>
-                    <button ng-click="deleteActivity(activity)" class="btn btn-danger btn-xs">Delete</button>
+
+        }
+
+        <tr>
+            <td>
+                <a href="@Url.Action("Edit", new { id = item.Id })" >
+                    <span class="glyphicon glyphicon-edit" title="Edit"></span>
+                </a>
+                |
+                <a href="@Url.Action("Delete", new { id = item.Id })">
+                    <span class="glyphicon glyphicon-remove" title="Delete"></span>                    
+                </a>
+            </td>            
+            <td>
+                @Html.DisplayFor(modelItem => item.ActivityDate)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Mileage)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Miles)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gallons)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MPG)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Description)
                 </td>
-            </tr>
-        </table>
-    </div>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>*@
 
-    <div class="activity_divider"></div>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>*@
+        </tr>
+    }
+</table>
 
-    <table class="table table-striped table-bordered table-condensed table-responsive" ">
+<div class="activity_divider"></div>
+
+    <table class="table table-striped table-bordered table-condensed table-responsive"">
         <tr>
             <th colspan="7" class="text-center">Non-Gas Purchases</th>
         </tr>
         <tr>
-            <th>Vehicle</th>
-            <th>Activity Date</th>
-            <th>Mileage</th>
-            <th>Description</th>
-            <th>Cost</th>
-            <th>Comments</th>
             <th></th>
+            <th>Description</th>
+            <th>Activity Date</th>
+            <th>Total Miles</th>            
+            <th>Description</th>
+            <th>Comments</th>
         </tr>
 
         @{
             previousItem = "";
         }
 
-        <tr ng-repeat="activity in dataList | filter: { Category: { Description: '!Gas' } }">
-            <td ng-bind="activity.Vehicle.VehicleName"></td>
-            <td>{{ activity.ActivityDate | parseDate | date : "MM/dd/yyyy" }}</td>
-            <td ng-bind="activity.Mileage | number:2"></td>
-            <td ng-bind="activity.Category.Description"></td>
-            <td ng-bind="activity.Cost| currency"></td>
-            <td ng-bind="activity.Comments"></td>
-            <td style="width:60px">
-                <button ng-click="editActivity(activity)" class="btn btn-primary btn-xs">Edit</button>
-                <button ng-click="deleteActivity(activity)" class="btn btn-danger btn-xs">Delete</button>
-            </td>
-       </tr>
+
+        @foreach (var item in Model.NonGasPurchases)
+        {
+            if (previousItem != item.Vehicle.VehicleName)
+            {
+                previousItem = item.Vehicle.VehicleName;
+                <tr>
+                    <th colspan="6" class="text-center">
+                        @Html.DisplayFor(modelItem => item.Vehicle.VehicleName)
+                    </th>
+                </tr>
+
+            }
+
+            <tr>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = item.Id })">
+                        <span class="glyphicon glyphicon-edit" title="Edit"></span>
+                    </a>
+                    |
+                    <a href="@Url.Action("Delete", new { id = item.Id })">
+                        <span class="glyphicon glyphicon-remove" title="Delete"></span>
+                    </a>
+                </td>            
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActivityDate)
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Mileage)
+                    </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Miles)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gallons)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MPG)
+                </td>*@
+                <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comments)
+                    </td>
+
+                @*<td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>*@
+            </tr>
+        }
 
     </table>
-</div>
+
+<br />
+@*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@

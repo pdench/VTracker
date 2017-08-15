@@ -26,18 +26,6 @@ namespace VehicleTracker.Controllers
         public ActionResult Index(bool? firstLogin = false)
         {
 
-            //if (firstLogin.GetValueOrDefault())
-            //{
-            //    cvModel.FirstLogin = true;
-            //}
-            return View();
-        }
-
-        // GET: Category
-        [Authorize]
-        public JsonResult GetCategories()
-        {
-
             accountId = GetUserId();
             var categories = from c in db.Categories                             
                              select c;
@@ -48,10 +36,15 @@ namespace VehicleTracker.Controllers
             CategoryViewModel cvModel = new CategoryViewModel();
 
             cvModel.Categories = output.ToList();
-
+            
+            if (firstLogin.GetValueOrDefault())
+            {
+                cvModel.FirstLogin = true;
+            }
+            
             //categories = categories.Where(c => c.AccountId == accountId );
 
-            return Json(output.ToList(), JsonRequestBehavior.AllowGet);
+            return View(cvModel);
         }
 
         // GET: Category/Details/5

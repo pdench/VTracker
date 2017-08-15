@@ -45,10 +45,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNet.Highcharts, Version=4.0.0.0, Culture=neutral, PublicKeyToken=88854f873df851bf, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNet.Highcharts.4.0\lib\DotNet.Highcharts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -206,9 +202,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701172138384_cost_added.cs" />
-    <Compile Include="Migrations\201701172138384_cost_added.Designer.cs">
-      <DependentUpon>201701172138384_cost_added.cs</DependentUpon>
+    <Compile Include="Migrations\201701051929465_new_db.cs" />
+    <Compile Include="Migrations\201701051929465_new_db.Designer.cs">
+      <DependentUpon>201701051929465_new_db.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -229,7 +225,6 @@
     <Compile Include="ViewModels\VehicleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\ajax-loader.gif" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
@@ -286,7 +281,6 @@
     <Content Include="Scripts\angular-cookies.js" />
     <Content Include="Scripts\angular-cookies.min.js" />
     <Content Include="Scripts\angular-csp.css" />
-    <Content Include="Scripts\angular-highcharts.js" />
     <Content Include="Scripts\angular-loader.js" />
     <Content Include="Scripts\angular-loader.min.js" />
     <Content Include="Scripts\angular-message-format.js" />
@@ -309,8 +303,6 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\charts.js" />
-    <Content Include="Scripts\controller.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-touch.min.js.map" />
@@ -325,70 +317,7 @@
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <None Include="Properties\PublishProfiles\Local deploy.pubxml" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\adapters\standalone-framework.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\adapters\standalone-framework.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-3d.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-3d.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-all.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-more.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts-more.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\highcharts.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\canvas-tools.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\canvas-tools.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\data.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\data.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\drilldown.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\drilldown.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\exporting.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\exporting.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\funnel.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\funnel.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\heatmap.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\heatmap.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\no-data-to-display.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\no-data-to-display.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\solid-gauge.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\modules\solid-gauge.src.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\dark-blue.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\dark-green.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\dark-unica.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\gray.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\grid-light.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\grid.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\sand-signika.js" />
-    <Content Include="Scripts\Highcharts-4.0.1\js\themes\skies.js" />
-    <Content Include="Scripts\highcharts\adapters\mootools-adapter.js" />
-    <Content Include="Scripts\highcharts\adapters\mootools-adapter.src.js" />
-    <Content Include="Scripts\highcharts\adapters\prototype-adapter.js" />
-    <Content Include="Scripts\highcharts\adapters\prototype-adapter.src.js" />
-    <Content Include="Scripts\highcharts\adapters\standalone-framework.js" />
-    <Content Include="Scripts\highcharts\adapters\standalone-framework.src.js" />
-    <Content Include="Scripts\highcharts\highcharts-more.js" />
-    <Content Include="Scripts\highcharts\highcharts-more.src.js" />
-    <Content Include="Scripts\highcharts\highcharts.js" />
-    <Content Include="Scripts\highcharts\highcharts.src.js" />
-    <Content Include="Scripts\highcharts\highstock.js" />
-    <Content Include="Scripts\highcharts\highstock.src.js" />
-    <Content Include="Scripts\highcharts\modules\annotations.js" />
-    <Content Include="Scripts\highcharts\modules\annotations.src.js" />
-    <Content Include="Scripts\highcharts\modules\canvas-tools.js" />
-    <Content Include="Scripts\highcharts\modules\canvas-tools.src.js" />
-    <Content Include="Scripts\highcharts\modules\data.js" />
-    <Content Include="Scripts\highcharts\modules\data.src.js" />
-    <Content Include="Scripts\highcharts\modules\exporting.js" />
-    <Content Include="Scripts\highcharts\modules\exporting.src.js" />
-    <Content Include="Scripts\highcharts\modules\funnel.js" />
-    <Content Include="Scripts\highcharts\modules\funnel.src.js" />
-    <Content Include="Scripts\highcharts\modules\heatmap.js" />
-    <Content Include="Scripts\highcharts\modules\heatmap.src.js" />
-    <Content Include="Scripts\highcharts\modules\map.js" />
-    <Content Include="Scripts\highcharts\modules\map.src.js" />
-    <Content Include="Scripts\highcharts\themes\dark-blue.js" />
-    <Content Include="Scripts\highcharts\themes\dark-green.js" />
-    <Content Include="Scripts\highcharts\themes\gray.js" />
-    <Content Include="Scripts\highcharts\themes\grid.js" />
-    <Content Include="Scripts\highcharts\themes\skies.js" />
+    <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
     <Content Include="Scripts\i18n\angular-locale_af.js" />
@@ -1118,10 +1047,9 @@
     <Content Include="Scripts\i18n\angular-locale_zh.js" />
     <Content Include="Scripts\i18n\angular-locale_zu-za.js" />
     <Content Include="Scripts\i18n\angular-locale_zu.js" />
-    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="Scripts\jquery-2.0.3.js" />
-    <Content Include="Scripts\jquery-2.0.3.min.js" />
-    <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
@@ -1132,7 +1060,6 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\service.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1188,12 +1115,10 @@
     <Content Include="Views\Vehicle\Index.cshtml" />
     <Content Include="Views\Home\_Login.cshtml" />
     <Content Include="Scripts\version.json" />
-    <Content Include="Views\Activity\Chart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="SQL\" />
-    <Folder Include="Views\Chart\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1203,8 +1128,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701172138384_cost_added.resx">
-      <DependentUpon>201701172138384_cost_added.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201701051929465_new_db.resx">
+      <DependentUpon>201701051929465_new_db.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

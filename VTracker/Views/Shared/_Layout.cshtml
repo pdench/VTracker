@@ -11,13 +11,18 @@
     @Styles.Render("~/Content/themes/base/css");
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryui")
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    @*<script src="~/Scripts/angular.min.js"></script>*@
 
-    <script src="~/Scripts/controller.js"></script>
 
+    <script type="text/javascript">
+        var myApp = angular.module('myApp', []);
+        myApp.controller('myAppCtrl', function ($scope, $http) {
+
+        });
+
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
