@@ -20,12 +20,37 @@
     }*@
     </p>
 
+
+<div ng-controller="categoryCtrl">
+    <img src="~/Content/ajax-loader.gif" ng-show="loading" />
+    <div class="spinner" ng-show="!loading">
+        <table class="table table-striped table-bordered table-condensed table-responsive" ">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="vehicle in dataList">
+                <td ng-bind="vehicle.Description"></td>
+                <td ng-show="vehicle.BuiltIn"><span class="label label-success">Built In</span></td>
+                <td ng-hide="vehicle.BuiltIn">
+                    <button ng-click="editVehicle(vehicle)" class="btn btn-primary btn-xs">Edit</button>
+                    <button ng-click="deleteVehicle(vehicle)" class="btn btn-danger btn-xs">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+@*
+
     <div ng-controller="categoryCtrl">
         <img src="~/Content/ajax-loader.gif" ng-show="loading" />
         <div class="spinner" ng-show="!loading">
 
-
-            <table class="table table-striped table-bordered table-condensed table-responsive" ">
+            <table class="table table-striped table-bordered table-condensed table-responsive">
                 <tr>
                     <th>
                         @Html.DisplayNameFor(model => model.Description)
@@ -33,15 +58,37 @@
                     <th></th>
 
                 </tr>
-                <tr ng-repeat="vehicle in dataList">
-                    <td ng-bind="vehicle.Description"></td>
-                    <td ng-show="vehicle.BuiltIn"><span class="label label-success">Built In</span></td>
-                    <td ng-hide="vehicle.BuiltIn">
-                        <button ng-click="editVehicle(vehicle)" class="btn btn-primary btn-xs">Edit</button>
+                
+                <tr ng-repeat="category in dataList">
+                    <td ng-bind="category.Description"></td>
+                    <td ng-show="category.BuiltIn"><span class="label label-success">Built In</span></td>
+                    <td ng-hide="category.BuiltIn">
+                        <button ng-click="editCategory(category.Id, category.Description)" class="btn btn-primary btn-xs">Edit</button>
                         <button ng-click="deleteVehicle(vehicle)" class="btn btn-danger btn-xs">Delete</button>
                     </td>
                 </tr>
 
             </table>
         </div>
+        <div class="addEdit" ng-show="editing">
+            <form ng-submit="saveData()" name="editCategory">
+                <table class="table table-striped table-bordered table-condensed table-responsive">
+                    <tr>
+                        <td>Description</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" name="description" ng-model="Description" />
+                            <input type="text" name="categoryId" ng-model="Id" ng-hide="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" ng-click="saveData()" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
+*@
