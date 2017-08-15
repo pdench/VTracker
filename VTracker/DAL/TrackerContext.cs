@@ -12,7 +12,7 @@ namespace VTracker.DAL
     {
         public TrackerContext() : base("VTrackerConn")
         {
-
+            Database.SetInitializer<TrackerContext>(null);
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }
@@ -22,7 +22,8 @@ namespace VTracker.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
         }
     }
 }
